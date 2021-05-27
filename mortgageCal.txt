@@ -1,0 +1,38 @@
+import java.util.Scanner;
+import java.text.NumberFormat;
+
+public class MortgageRefactoring {
+    public static void main(String[] args) {
+        int principal=(int)readNumber("Principal:",1000,1_00_000);
+        float annualInterest=(float) readNumber("Annual Interest:",1, 30);
+        byte years=(byte) readNumber("Period(years):",1, 30);
+        double mortgage= mortgageCalculator(principal, (int)annualInterest, years);
+        String mortgageFormatted= NumberFormat.getCurrencyInstance().format(mortgage);
+        System.out.println("Mortgage: "+mortgageFormatted);
+    }
+
+    public static double readNumber(String prompt, double min, double max) {
+        Scanner scanner = new Scanner(System.in);
+        double value;
+        while (true) {
+            System.out.println(prompt);
+            value = scanner.nextFloat();
+            if (value >= min && value <= max) {
+                break;
+            }
+            System.out.println("Enter a value between" + min + "and" + max);
+        }
+        return value;
+    }
+
+    public static double mortgageCalculator(int principal, int annualInterest, byte years){
+        final byte MonthsInYear=12;
+        final byte Percent=100;
+        float monthlyInterest=annualInterest/Percent/MonthsInYear;
+        float numberOfPayments=years*MonthsInYear;
+        double mortgage = principal
+                * (monthlyInterest * Math.pow(1 + monthlyInterest, numberOfPayments))
+                / (Math.pow(1 + monthlyInterest, numberOfPayments) - 1);
+        return mortgage;
+    }
+}
